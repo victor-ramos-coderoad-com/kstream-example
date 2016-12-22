@@ -3,7 +3,6 @@ package com.mojix.examples;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import com.mojix.examples.commons.wrappers.ThingWrapper;
 import org.apache.avro.Schema;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.Decoder;

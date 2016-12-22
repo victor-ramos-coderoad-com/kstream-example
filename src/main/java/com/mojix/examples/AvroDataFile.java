@@ -34,10 +34,8 @@ public class AvroDataFile {
         Schema.Parser parser = new Schema.Parser();
         Schema schema = parser.parse(schemaDescription);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        DatumWriter<GenericRecord> writer = new GenericDatumWriter<GenericRecord>(
-                schema);
-        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(
-                writer);
+        DatumWriter<GenericRecord> writer = new GenericDatumWriter<>(schema);
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(writer);
         dataFileWriter.create(schema, os);
 
         // Populate data
@@ -53,9 +51,9 @@ public class AvroDataFile {
         System.out.println("encoded string: " + os.toString());
 
         // Decode
-        DatumReader<GenericRecord> reader = new GenericDatumReader<GenericRecord>();
+        DatumReader<GenericRecord> reader = new GenericDatumReader<>();
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-        DataFileStream<GenericRecord> dataFileReader = new DataFileStream<GenericRecord>(
+        DataFileStream<GenericRecord> dataFileReader = new DataFileStream<>(
                 is, reader);
 
         GenericRecord record = null;

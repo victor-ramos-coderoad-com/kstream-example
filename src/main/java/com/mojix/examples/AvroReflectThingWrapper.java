@@ -2,17 +2,8 @@ package com.mojix.examples;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 
-import com.mojix.examples.commons.wrappers.ThingPropertyWrapper;
 import com.mojix.examples.commons.wrappers.ThingWrapper;
-import com.mojix.examples.commons.wrappers.ZonePropertyWrapper;
-import com.mojix.examples.commons.wrappers.ZoneWrapper;
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
-import io.confluent.kafka.serializers.KafkaAvroDecoder;
-import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
-import io.confluent.kafka.serializers.KafkaAvroEncoder;
-import kafka.utils.VerifiableProperties;
 import org.apache.avro.Schema;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.Decoder;
@@ -22,8 +13,6 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.reflect.ReflectData;
 import org.apache.avro.reflect.ReflectDatumReader;
 import org.apache.avro.reflect.ReflectDatumWriter;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.streams.StreamsConfig;
 
 /**
  * Created by dbascope on 12/22/16
