@@ -1,4 +1,4 @@
-package com.mojix.examples;
+package com.mojix.examples.avro;
 
 /**
  * Created by dbascope on 12/22/16

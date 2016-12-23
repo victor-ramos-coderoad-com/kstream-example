@@ -1,8 +1,12 @@
-package com.mojix.examples;
+package com.mojix.examples.avro;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+import com.mojix.examples.commons.wrappers.ThingPropertyWrapper;
 import com.mojix.examples.commons.wrappers.ThingWrapper;
 import org.apache.avro.Schema;
 import org.apache.avro.io.DatumWriter;
@@ -42,7 +46,7 @@ public class AvroReflectThingWrapper {
         System.out.println("Id: "+decodedThingWrapper.getId());
         System.out.println("Name: "+decodedThingWrapper.getName());
         System.out.println("SN: "+decodedThingWrapper.getSerialNumber());
-        System.out.println("Properties: "+decodedThingWrapper.getProperties().get(0).toString());
-
+        System.out.println("Properties: ");
+        decodedThingWrapper.getProperties().forEach(prop -> prop.forEach((s, udf) -> System.out.println(s + " - " + udf.getValue())));
     }
 }

@@ -1,4 +1,4 @@
-package com.mojix.examples;
+package com.mojix.examples.avro;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
