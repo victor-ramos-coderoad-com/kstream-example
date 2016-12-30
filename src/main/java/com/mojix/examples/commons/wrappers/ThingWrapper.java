@@ -3,7 +3,12 @@ package com.mojix.examples.commons.wrappers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.mojix.examples.commons.serializers.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mojix.examples.commons.serializers.DateAsStringEncoding;
+import com.mojix.examples.commons.serializers.ThingDeserializer;
+import com.mojix.examples.commons.serializers.ThingSerializer;
+import org.apache.avro.reflect.AvroEncode;
+import org.apache.avro.reflect.DateAsLongEncoding;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -13,6 +18,7 @@ import java.util.Map;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonSerialize(using = ThingSerializer.class)
 @JsonDeserialize(using = ThingDeserializer.class)
 public class ThingWrapper implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -35,16 +41,22 @@ public class ThingWrapper implements Serializable {
     /**
      * Date time of createdTime.
      */
+    @AvroEncode(using = DateAsLongEncoding.class)
+//    @AvroEncode(using = DateAsStringEncoding.class)
     public Date createdTime;
 
     /**
      * Date Time of modifiedTime.
      */
+    @AvroEncode(using = DateAsLongEncoding.class)
+//    @AvroEncode(using = DateAsStringEncoding.class)
     public Date modifiedTime;
 
     /**
      * Message time
      */
+    @AvroEncode(using = DateAsLongEncoding.class)
+//    @AvroEncode(using = DateAsStringEncoding.class)
     public Date time;
 
     /**
@@ -195,5 +207,17 @@ public class ThingWrapper implements Serializable {
     public static ThingWrapper parse(String json) throws IOException {
         ObjectMapper m = new ObjectMapper();
         return m.readValue(json, ThingWrapper.class);
+    }
+
+    /**
+     * Static method to create a instance of message wrapper.
+     *
+     * @param tw A json string with contains the message.
+     * @return instance of message wrapper.
+     * @throws IOException input or output exception.
+     */
+    public static String toJsonString(ThingWrapper tw) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        return m.writeValueAsString(tw);
     }
 }

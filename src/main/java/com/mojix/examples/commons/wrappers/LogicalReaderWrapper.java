@@ -12,4 +12,44 @@ public class LogicalReaderWrapper extends ThingPropertyValueWrapper implements S
     public String x;
     public String y;
     public String z;
+
+    public Long getZoneInId() {
+        return zoneInId;
+    }
+
+    public void setZoneInId(Long zoneInId) {
+        this.zoneInId = zoneInId;
+    }
+
+    public Long getZoneOutId() {
+        return zoneOutId;
+    }
+
+    public void setZoneOutId(Long zoneOutId) {
+        this.zoneOutId = zoneOutId;
+    }
+
+    public String getX() {
+        return x;
+    }
+
+    public void setX(String x) {
+        this.x = x;
+    }
+
+    public String getY() {
+        return y;
+    }
+
+    public void setY(String y) {
+        this.y = y;
+    }
+
+    public String getZ() {
+        return z;
+    }
+
+    public void setZ(String z) {
+        this.z = z;
+    }
 }

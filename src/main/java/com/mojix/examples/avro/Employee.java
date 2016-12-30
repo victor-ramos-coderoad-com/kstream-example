@@ -1,12 +1,20 @@
 package com.mojix.examples.avro;
 
+import com.mojix.examples.commons.serializers.DateAsStringEncoding;
+import org.apache.avro.reflect.AvroEncode;
+
+import java.util.Date;
+
 /**
  * Created by dbascope on 12/22/16
  */
 class Employee {
-    private String name;
-    private String ssn;
-    private int age;
+    public String name;
+    public String ssn;
+    public int age;
+//    @AvroEncode(using = DateAsLongEncoding.class)
+    @AvroEncode(using = DateAsStringEncoding.class)
+    public Date birthday;
 
     String getName() {
         return name;
@@ -30,5 +38,13 @@ class Employee {
 
     void setAge(int age) {
         this.age = age;
+    }
+
+    Date getBirthday() {
+        return birthday;
+    }
+
+    void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 }

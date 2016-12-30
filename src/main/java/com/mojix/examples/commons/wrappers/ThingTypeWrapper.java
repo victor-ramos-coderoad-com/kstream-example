@@ -15,7 +15,7 @@ public class ThingTypeWrapper
 	public String name;
 	
 	public String code;
-	
+
 	public List<ThingTypeFieldWrapper> fields;
 
 	public List<ThingTypeFieldWrapper> getUdfs()
