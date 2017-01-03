@@ -8,6 +8,7 @@ import com.mojix.examples.commons.wrappers.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -45,24 +46,25 @@ public class ThingSerializer extends JsonSerializer<ThingWrapper> {
         gen.writeObject(thing);
     }
 
-    private ObjectNode getMetaNode(MetaWrapper meta){
+    private static ObjectNode getMetaNode(Object meta){
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode metaNode = mapper.createObjectNode();
-        metaNode.put("bridgeCode", meta.getBridgeCode());
-        metaNode.put("sqn", meta.getSqn());
-        metaNode.put("specName", meta.getSpecName());
-        ArrayNode origin = mapper.createArrayNode();
-        for (float coord : meta.getOrigin()) {
-            origin.add(coord);
+        ObjectNode output =  mapper.createObjectNode();
+        for (Field i : meta.getClass().getFields()) {
+            try {
+                if (i.get(meta) instanceof Float[]){
+                    ArrayNode arrayNode = mapper.createArrayNode();
+                    for (Float origin : (Float[]) i.get(meta)){
+                        arrayNode.add(origin);
+                    }
+                    output.set(i.getName(), arrayNode);
+                } else {
+                    output.put(i.getName(), i.get(meta).toString());
+                }
+            } catch (Exception e) {
+                logger.error("Error parsing non UDFs properties.", e);
+            }
         }
-        metaNode.set("origin", origin);
-        metaNode.put("units", meta.getUnits());
-        metaNode.put("partition", meta.getPartition());
-        metaNode.put("numPartitions", meta.getNumPartitions());
-        metaNode.put("reblinked", meta.getReblinked());
-        metaNode.put("outOfOrder", meta.getOutOfOrder());
-        metaNode.put("newBlink", meta.getNewBlink());
-        return metaNode;
+        return output;
     }
 
     private ObjectNode getGroupNode (GroupThingWrapper group) {

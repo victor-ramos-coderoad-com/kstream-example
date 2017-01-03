@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@JsonSerialize(using = ThingSerializer.class)
+@JsonSerialize(using = ThingSerializer.class)
 @JsonDeserialize(using = ThingDeserializer.class)
 public class ThingWrapper implements Serializable {
     private static final long serialVersionUID = 1L;

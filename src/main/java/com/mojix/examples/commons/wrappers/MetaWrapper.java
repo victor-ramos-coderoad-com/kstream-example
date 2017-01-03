@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class MetaWrapper implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String bridgeCode;
-    private Long sqn;
-    private String specName;
-    private Float[] origin;
-    private String units;
-    private Long partition;
-    private Long numPartitions;
-    private Boolean reblinked;
-    private Boolean outOfOrder;
-    private Boolean newBlink;
+    public String bridgeCode;
+    public Long sqn;
+    public String specName;
+    public Float[] origin;
+    public String units;
+    public Long partition;
+    public Long numPartitions;
+    public Boolean reblinked;
+    public Boolean outOfOrder;
+    public Boolean newBlink;
 
     public String getBridgeCode() {
         return bridgeCode;
