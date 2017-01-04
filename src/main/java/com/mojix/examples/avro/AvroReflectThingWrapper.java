@@ -47,6 +47,6 @@ public class AvroReflectThingWrapper {
         System.out.println("Name: "+decodedThingWrapper.getName());
         System.out.println("SN: "+decodedThingWrapper.getSerialNumber());
         System.out.println("Properties: ");
-        decodedThingWrapper.getProperties().forEach(prop -> prop.forEach((s, udf) -> System.out.println(s + " - " + udf.getValue())));
+//        decodedThingWrapper.getProperties().forEach(prop -> prop.forEach((s, udf) -> System.out.println(s + " - " + udf.getValue())));
     }
 }

@@ -3,6 +3,7 @@ package com.mojix.examples.commons.wrappers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mojix.examples.commons.serializers.*;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = ThingDeserializer.class)
+@JsonSerialize(using = ThingSerializer.class)
 public class ThingWrapper implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -61,7 +63,7 @@ public class ThingWrapper implements Serializable {
      * list of properties first element of the list is a current thing
      * list of properties second element of the list is a previous thing
      */
-    public List<Map<String, ThingPropertyWrapper>> properties;
+    public PropertyWrapper properties;
 
     public MetaWrapper meta;
 
@@ -148,16 +150,16 @@ public class ThingWrapper implements Serializable {
         this.thingType = thingType;
     }
 
-    public List<Map<String, ThingPropertyWrapper>> getProperties() {
+    public PropertyWrapper getProperties() {
         return properties;
     }
 
-    public void setProperties(List<Map<String, ThingPropertyWrapper>> properties) {
+    public void setProperties(PropertyWrapper properties) {
         this.properties = properties;
     }
 
     ThingPropertyWrapper getUdf(String name) {
-        return properties.get(0).get(name);
+        return properties.getCurrent().get(name);
     }
 
     public ThingWrapper() {
@@ -172,7 +174,7 @@ public class ThingWrapper implements Serializable {
                         Date time,
                         GroupThingWrapper group,
                         ThingPropertyValueWrapper thingType,
-                        List<Map<String, ThingPropertyWrapper>> properties) {
+                        PropertyWrapper properties) {
         this.meta = meta;
         this.id = id;
         this.serialNumber = serialNumber;
@@ -195,5 +197,10 @@ public class ThingWrapper implements Serializable {
     public static ThingWrapper parse(String json) throws IOException {
         ObjectMapper m = new ObjectMapper();
         return m.readValue(json, ThingWrapper.class);
+    }
+
+    public static String toJsonString(ThingWrapper tw) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        return m.writeValueAsString(tw);
     }
 }

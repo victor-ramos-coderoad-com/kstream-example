@@ -108,11 +108,14 @@ public class ThingDeserializer extends StdDeserializer<ThingWrapper> {
      * @return list of map[{@link String}, {@link ThingPropertyWrapper}]
      * @throws JsonProcessingException Exception to parse json string.
      */
-    private List<Map<String, ThingPropertyWrapper>> deserializeProperties(ObjectMapper mapper, ArrayNode properties)
+    private PropertyWrapper deserializeProperties(ObjectMapper mapper, ArrayNode properties)
             throws
             JsonProcessingException {
         List<Map<String, ThingPropertyWrapper>> propertyList = new ArrayList<>();
+        Map<String, ThingPropertyWrapper> current = new HashMap<>();
+        Map<String, ThingPropertyWrapper> previous = new HashMap<>();
         if (properties != null) {
+            int idx = 0;
             for (JsonNode propertyItem : properties) {
                 Map<String, ThingPropertyWrapper> thingPropertyWrapperMap = new HashMap<>();
                 Iterator<String> keys = propertyItem.fieldNames();
@@ -123,8 +126,14 @@ public class ThingDeserializer extends StdDeserializer<ThingWrapper> {
                             .class));
                 }
                 propertyList.add(thingPropertyWrapperMap);
+                if (idx == 0){
+                    current = thingPropertyWrapperMap;
+                } else {
+                    previous = thingPropertyWrapperMap;
+                }
+                idx ++;
             }
         }
-        return propertyList;
+        return new PropertyWrapper(current, previous);
     }
 }
