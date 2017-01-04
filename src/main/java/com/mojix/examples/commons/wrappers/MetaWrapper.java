@@ -9,6 +9,24 @@ public class MetaWrapper implements Serializable {
     public String specName;
     public Float[] origin;
     public String units;
+
+    public MetaWrapper() {
+    }
+
+    public MetaWrapper(String bridgeCode, Long sqn, String specName, Float[] origin, String units, Long partition,
+                       Long numPartitions, Boolean reblinked, Boolean outOfOrder, Boolean newBlink) {
+        this.bridgeCode = bridgeCode;
+        this.sqn = sqn;
+        this.specName = specName;
+        this.origin = origin;
+        this.units = units;
+        this.partition = partition;
+        this.numPartitions = numPartitions;
+        this.reblinked = reblinked;
+        this.outOfOrder = outOfOrder;
+        this.newBlink = newBlink;
+    }
+
     public Long partition;
     public Long numPartitions;
     public Boolean reblinked;

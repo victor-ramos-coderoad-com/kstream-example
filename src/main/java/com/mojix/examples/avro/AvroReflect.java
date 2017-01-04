@@ -23,6 +23,14 @@ public class AvroReflect {
     private final static Schema schema = reflectData.getSchema(Employee.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        avroTest(123L, 1L);
+        System.out.println("----------");
+        avroTest("TEST", 2L);
+        System.out.println("----------");
+        avroTest(new EmployeeContact("mail", 123456789L, 98764L), 3L);
+    }
+
+    public static void avroTest(Object value, Long dataTypeId) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 //        Encoder e = EncoderFactory.get().binaryEncoder(os, null);
         Encoder e = EncoderFactory.get().jsonEncoder(schema, os);
@@ -34,13 +42,14 @@ public class AvroReflect {
         employee.setAge(29);
         Date birthday = new Date();
         employee.setBirthday(birthday);
+        employee.setValue(new EmployeeValue(value, dataTypeId));
 
         writer.write(employee, e);
         e.flush();
 
         System.out.println(new Date() + " --- " + os.toString());
 
-        Thread.sleep(5000);
+//        Thread.sleep(5000);
         ReflectDatumReader<Employee> reader = new ReflectDatumReader<>(schema);
 //        Decoder decoder = DecoderFactory.get().binaryDecoder(os.toByteArray(), null);
         Decoder decoder = DecoderFactory.get().jsonDecoder(schema, os.toString());
@@ -50,5 +59,6 @@ public class AvroReflect {
         System.out.println("Age: "+decodedEmployee.getAge());
         System.out.println("SSN: "+decodedEmployee.getSsn());
         System.out.println("Birthday: "+decodedEmployee.getBirthday());
+        System.out.println("Value: "+decodedEmployee.getValue());
     }
 }

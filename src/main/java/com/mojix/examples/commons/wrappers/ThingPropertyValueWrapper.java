@@ -10,6 +10,15 @@ public class ThingPropertyValueWrapper extends BaseDataTypeWrapper implements Se
     private static final long serialVersionUID = 1L;
     public Long id;
 
+    public ThingPropertyValueWrapper() {
+        super(null, null);
+    }
+
+    public ThingPropertyValueWrapper(Long id, String name, String code) {
+        super(name, code);
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }

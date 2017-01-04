@@ -13,6 +13,14 @@ public class ShiftWrapper extends ThingPropertyValueWrapper implements Serializa
     public Long endTimeOfDay;
     public String daysOfWeek;
 
+    public ShiftWrapper(boolean active, Long startTimeOfDay, Long endTimeOfDay, String daysOfWeek, Long id, String name, String code) {
+        super(id, name, code);
+        this.active = active;
+        this.startTimeOfDay = startTimeOfDay;
+        this.endTimeOfDay = endTimeOfDay;
+        this.daysOfWeek = daysOfWeek;
+    }
+
     public boolean isActive() {
         return active;
     }

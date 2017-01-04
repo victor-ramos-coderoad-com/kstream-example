@@ -11,6 +11,11 @@ public class BaseDataTypeWrapper implements Serializable {
     public String name;
     public String code;
 
+    public BaseDataTypeWrapper(String name, String code) {
+        this.name = name;
+        this.code = code;
+    }
+
     public String getName() {
         return name;
     }

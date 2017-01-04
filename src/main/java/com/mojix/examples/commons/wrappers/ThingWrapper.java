@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mojix.examples.commons.serializers.DateAsStringEncoding;
+import com.mojix.examples.commons.serializers.FinalThingWrapper;
 import com.mojix.examples.commons.serializers.ThingDeserializer;
 import com.mojix.examples.commons.serializers.ThingSerializer;
 import org.apache.avro.reflect.AvroEncode;
@@ -18,8 +19,8 @@ import java.util.Map;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(using = ThingSerializer.class)
-@JsonDeserialize(using = ThingDeserializer.class)
+//@JsonSerialize(using = ThingSerializer.class)
+//@JsonDeserialize(using = ThingDeserializer.class)
 public class ThingWrapper implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -73,7 +74,8 @@ public class ThingWrapper implements Serializable {
      * list of properties first element of the list is a current thing
      * list of properties second element of the list is a previous thing
      */
-    public List<Map<String, ThingPropertyWrapper>> properties;
+    @AvroEncode(using = FinalThingWrapper.class)
+    public PropertyWrapper properties;
 
     public MetaWrapper meta;
 
@@ -160,20 +162,35 @@ public class ThingWrapper implements Serializable {
         this.thingType = thingType;
     }
 
-    public List<Map<String, ThingPropertyWrapper>> getProperties() {
+    public PropertyWrapper getProperties() {
         return properties;
     }
 
-    public void setProperties(List<Map<String, ThingPropertyWrapper>> properties) {
+    public void setProperties(PropertyWrapper properties) {
         this.properties = properties;
     }
 
     ThingPropertyWrapper getUdf(String name) {
-        return properties.get(0).get(name);
+        return properties.getCurrent().get(name);
     }
 
     public ThingWrapper() {
 
+    }
+
+    public ThingWrapper(Long id, String serialNumber, String name, Date createdTime, Date modifiedTime, Date time,
+                        GroupThingWrapper group, ThingPropertyValueWrapper thingType, PropertyWrapper properties,
+                        MetaWrapper meta) {
+        this.id = id;
+        this.serialNumber = serialNumber;
+        this.name = name;
+        this.createdTime = createdTime;
+        this.modifiedTime = modifiedTime;
+        this.time = time;
+        this.group = group;
+        this.thingType = thingType;
+        this.properties = properties;
+        this.meta = meta;
     }
 
     public ThingWrapper(MetaWrapper meta,
@@ -184,7 +201,7 @@ public class ThingWrapper implements Serializable {
                         Date time,
                         GroupThingWrapper group,
                         ThingPropertyValueWrapper thingType,
-                        List<Map<String, ThingPropertyWrapper>> properties) {
+                        PropertyWrapper properties) {
         this.meta = meta;
         this.id = id;
         this.serialNumber = serialNumber;

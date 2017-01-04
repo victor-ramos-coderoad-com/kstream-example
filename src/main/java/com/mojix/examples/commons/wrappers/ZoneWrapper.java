@@ -7,6 +7,14 @@ package com.mojix.examples.commons.wrappers;
 public class ZoneWrapper extends ThingPropertyValueWrapper{
     public ZonePropertyWrapper facilityMap;
     public ZonePropertyWrapper zoneType;
+
+    public ZoneWrapper(ZonePropertyWrapper facilityMap, ZonePropertyWrapper zoneType, ZonePropertyWrapper zoneGroup, Long id, String name, String code) {
+        super(id, name, code);
+        this.facilityMap = facilityMap;
+        this.zoneType = zoneType;
+        this.zoneGroup = zoneGroup;
+    }
+
     public ZonePropertyWrapper zoneGroup;
 
     public ZonePropertyWrapper getFacilityMap() {

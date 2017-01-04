@@ -10,6 +10,15 @@ public class GroupThingWrapper extends ThingPropertyValueWrapper implements Seri
         return groupType;
     }
 
+    public GroupThingWrapper() {
+        super(0L, null, null);
+    }
+
+    public GroupThingWrapper(ThingPropertyValueWrapper groupType, Long id, String name, String code) {
+        super(id, name, code);
+        this.groupType = groupType;
+    }
+
     public void setGroupType(ThingPropertyValueWrapper groupType) {
         this.groupType = groupType;
     }

@@ -28,8 +28,8 @@ public class TimingTest {
         bw.close();
         int inc = 1;
         for (int i = 0; i < 10; i = i + inc) {
-//            test(1000 * (i + 1));
-            testJackson(1000 * (i + 1));
+            test(1000 * (i + 1));
+//            testJackson(1000 * (i + 1));
             FileWriter fw = new FileWriter(csvFile.getAbsoluteFile(), true);
             bw = new BufferedWriter(fw);
             bw.append("\n" + 10 * (i + 1) + "," +

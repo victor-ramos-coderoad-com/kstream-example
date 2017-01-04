@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.mojix.examples.commons.serializers.DateAsStringEncoding;
 import com.mojix.examples.commons.serializers.ThingPropertyDeserializer;
+import com.mojix.examples.commons.serializers.ThingPropertyEncoding;
 import org.apache.avro.reflect.AvroEncode;
 import org.apache.avro.reflect.DateAsLongEncoding;
 
@@ -44,7 +45,7 @@ public class ThingPropertyWrapper implements Serializable {
     /**
      * Template with contains a generic object.
      */
-//    @AvroEncode(using = ThingPropertyEncoding.class)
+    @AvroEncode(using = ThingPropertyEncoding.class)
     public Object value;
 
     /**

@@ -9,6 +9,16 @@ public class LogicalReaderWrapper extends ThingPropertyValueWrapper implements S
     private static final long serialVersionUID = 1L;
     public Long zoneInId;
     public Long zoneOutId;
+
+    public LogicalReaderWrapper(Long zoneInId, Long zoneOutId, String x, String y, String z, Long id, String name, String code) {
+        super(id, name, code);
+        this.zoneInId = zoneInId;
+        this.zoneOutId = zoneOutId;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public String x;
     public String y;
     public String z;

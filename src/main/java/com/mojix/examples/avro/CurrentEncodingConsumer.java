@@ -44,11 +44,11 @@ public class CurrentEncodingConsumer {
                 System.out.println("id:" + tw.getId());
                 System.out.println("serial:" + tw.getSerialNumber());
                 System.out.println("time:" + tw.getTime());
-                System.out.println("eNode:" + tw.getProperties().get(0).get("eNode").getValue());
+                System.out.println("eNode:" + tw.getProperties().getCurrent().get("eNode").getValue());
                 System.out.println("zone:" +
-                        ((ZoneWrapper) tw.getProperties().get(0).get("zone").getValue()).getCode());
+                        ((ZoneWrapper) tw.getProperties().getCurrent().get("zone").getValue()).getCode());
                 System.out.println("facility:" +
-                        ((ZoneWrapper) tw.getProperties().get(0).get("zone").getValue()).facilityMap.getName());
+                        ((ZoneWrapper) tw.getProperties().getCurrent().get("zone").getValue()).facilityMap.getName());
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,6 +1,8 @@
 package com.mojix.examples.avro;
 
 import com.mojix.examples.commons.serializers.DateAsStringEncoding;
+import com.mojix.examples.commons.serializers.ValueEncoding;
+import org.apache.avro.reflect.AvroAlias;
 import org.apache.avro.reflect.AvroEncode;
 
 import java.util.Date;
@@ -12,9 +14,19 @@ class Employee {
     public String name;
     public String ssn;
     public int age;
-//    @AvroEncode(using = DateAsLongEncoding.class)
+    //    @AvroEncode(using = DateAsLongEncoding.class)
     @AvroEncode(using = DateAsStringEncoding.class)
     public Date birthday;
+    @AvroEncode(using = ValueEncoding.class)
+    public EmployeeValue value;
+
+    public EmployeeValue getValue() {
+        return value;
+    }
+
+    public void setValue(EmployeeValue value) {
+        this.value = value;
+    }
 
     String getName() {
         return name;

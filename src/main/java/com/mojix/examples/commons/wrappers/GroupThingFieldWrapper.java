@@ -10,6 +10,15 @@ public class GroupThingFieldWrapper extends ThingPropertyValueWrapper implements
     private static final long serialVersionUID = 1L;
     public String description;
     public String hierarchyName;
+
+    public GroupThingFieldWrapper(String description, String hierarchyName, boolean archived, Long treeLevel, Long id, String name, String code) {
+        super(id, name, code);
+        this.description = description;
+        this.hierarchyName = hierarchyName;
+        this.archived = archived;
+        this.treeLevel = treeLevel;
+    }
+
     public boolean archived;
     public Long treeLevel;
 

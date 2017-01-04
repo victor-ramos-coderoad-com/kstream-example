@@ -1,14 +1,16 @@
 package com.mojix.examples.commons.serializers;
 
-import com.mojix.examples.commons.wrappers.ThingPropertyWrapper;
+import com.mojix.examples.commons.wrappers.*;
 import org.apache.avro.Schema;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.reflect.CustomEncoding;
+import org.apache.avro.reflect.ReflectData;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -16,8 +18,16 @@ import java.util.Date;
  */
 public class ThingPropertyEncoding extends CustomEncoding<ThingPropertyWrapper> {
     public ThingPropertyEncoding() {
-        schema = Schema.create(Schema.Type.STRING);
-        schema.addProp("CustomEncoding", "ThingPropertyEncoding");
+        ReflectData reflectData = ReflectData.get();
+        schema = Schema.createUnion(Arrays.asList(
+                reflectData.getSchema(ShiftWrapper.class),
+                reflectData.getSchema(ZoneWrapper.class),
+                reflectData.getSchema(GroupThingFieldWrapper.class),
+                reflectData.getSchema(LogicalReaderWrapper.class),
+                Schema.create(Schema.Type.LONG),
+                Schema.create(Schema.Type.BOOLEAN),
+                Schema.create(Schema.Type.STRING)
+        )) ;
     }
 
     @Override
