@@ -45,7 +45,7 @@ public class ThingSerializer extends JsonSerializer<ThingWrapper> {
         gen.writeObject(thing);
     }
 
-    private static ObjectNode getMetaNode(Object meta){
+    private static ObjectNode getMetaNode(MetaWrapper meta){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode output =  mapper.createObjectNode();
         for (Field i : meta.getClass().getFields()) {
@@ -60,7 +60,7 @@ public class ThingSerializer extends JsonSerializer<ThingWrapper> {
                     output.put(i.getName(), i.get(meta).toString());
                 }
             } catch (Exception e) {
-                logger.error("Error parsing non UDFs properties.", e);
+                logger.error("Error parsing meta properties.", e);
             }
         }
         return output;

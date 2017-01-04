@@ -1,8 +1,6 @@
 package com.mojix.examples.commons.serializers;
 
-import com.mojix.examples.avro.EmployeeContact;
 import com.mojix.examples.commons.wrappers.*;
-import org.apache.avro.Schema;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.reflect.CustomEncoding;
@@ -24,81 +22,57 @@ public class FinalThingWrapper extends CustomEncoding<PropertyWrapper> {
     protected void write(Object datum, Encoder out) throws IOException {
         Map<String, ThingPropertyWrapper> current = ((PropertyWrapper) datum).getCurrent();
         Map<String, ThingPropertyWrapper> previous = ((PropertyWrapper) datum).getPrevious();
-        out.writeMapStart();
-        out.setItemCount(current.size());
-        for (String key : current.keySet()) {
-            out.startItem();
-            out.writeString(key);
-            out.writeLong(current.get(key).getId());
-            out.writeLong(current.get(key).getTime().getTime());
-            out.writeBoolean(current.get(key).isBlinked());
-            out.writeBoolean(current.get(key).isModified());
-            out.writeBoolean(current.get(key).isTimeSeries());
-            encodeValue(current.get(key), out);
-            out.writeLong(current.get(key).getDataTypeId());
-        }
-        out.writeMapEnd();
-        out.writeMapStart();
-        out.setItemCount(previous.size());
-        for (String key : previous.keySet()) {
-            out.startItem();
-            out.writeString(key);
-            out.writeLong(previous.get(key).getId());
-            out.writeLong(previous.get(key).getTime().getTime());
-            out.writeBoolean(previous.get(key).isBlinked());
-            out.writeBoolean(previous.get(key).isModified());
-            out.writeBoolean(previous.get(key).isTimeSeries());
-            encodeValue(previous.get(key), out);
-            out.writeLong(previous.get(key).getDataTypeId());
-        }
-        out.writeMapEnd();
+        encodeProperties(current, out);
+        encodeProperties(previous, out);
     }
 
     @Override
     protected PropertyWrapper read(Object reuse, Decoder in) throws IOException {
-        Map<String, ThingPropertyWrapper> current = new HashMap<>();
-        in.readMapStart();
-        do {
-            String udf = in.readString();
-            Long id = in.readLong();
-            Date time = new Date(in.readLong());
-            Boolean blinked = in.readBoolean();
-            Boolean modified = in.readBoolean();
-            Boolean timeSeries = in.readBoolean();
-            int index = in.readIndex();
-            Object value = decodeValue(index, in);
-            Long dataTypeId = in.readLong();
-            current.put(udf, new ThingPropertyWrapper(id,
-                    time,
-                    blinked,
-                    modified,
-                    timeSeries,
-                    value,
-                    dataTypeId
-            ));
-        } while (in.mapNext() > 0);
-        Map<String, ThingPropertyWrapper> previous = new HashMap<>();
-        in.readMapStart();
-        do {
-            String udf = in.readString();
-            Long id = in.readLong();
-            Date time = new Date(in.readLong());
-            Boolean blinked = in.readBoolean();
-            Boolean modified = in.readBoolean();
-            Boolean timeSeries = in.readBoolean();
-            int index = in.readIndex();
-            Object value = decodeValue(index, in);
-            Long dataTypeId = in.readLong();
-            previous.put(udf, new ThingPropertyWrapper(id,
-                    time,
-                    blinked,
-                    modified,
-                    timeSeries,
-                    value,
-                    dataTypeId
-            ));
-        } while (in.mapNext() > 0);
+        Map<String, ThingPropertyWrapper> current = decodeProperties(in);
+        Map<String, ThingPropertyWrapper> previous = decodeProperties(in);
         return new PropertyWrapper(current, previous);
+    }
+
+    private void encodeProperties(Map<String, ThingPropertyWrapper> properties, Encoder out) throws IOException {
+        out.writeMapStart();
+        out.setItemCount(properties.size());
+        for (String key : properties.keySet()) {
+            out.startItem();
+            out.writeString(key);
+            out.writeLong(properties.get(key).getId());
+            out.writeLong(properties.get(key).getTime().getTime());
+            out.writeBoolean(properties.get(key).isBlinked());
+            out.writeBoolean(properties.get(key).isModified());
+            out.writeBoolean(properties.get(key).isTimeSeries());
+            encodeValue(properties.get(key), out);
+            out.writeLong(properties.get(key).getDataTypeId());
+        }
+        out.writeMapEnd();
+    }
+
+    private Map<String, ThingPropertyWrapper> decodeProperties(Decoder in) throws IOException {
+        Map<String, ThingPropertyWrapper> properties = new HashMap<>();
+        in.readMapStart();
+        do {
+            String udf = in.readString();
+            Long id = in.readLong();
+            Date time = new Date(in.readLong());
+            Boolean blinked = in.readBoolean();
+            Boolean modified = in.readBoolean();
+            Boolean timeSeries = in.readBoolean();
+            int index = in.readIndex();
+            Object value = decodeValue(index, in);
+            Long dataTypeId = in.readLong();
+            properties.put(udf, new ThingPropertyWrapper(id,
+                    time,
+                    blinked,
+                    modified,
+                    timeSeries,
+                    value,
+                    dataTypeId
+            ));
+        } while (in.mapNext() > 0);
+        return properties;
     }
 
     private void encodeValue(ThingPropertyWrapper udf, Encoder out) throws IOException {
@@ -117,28 +91,28 @@ public class FinalThingWrapper extends CustomEncoding<PropertyWrapper> {
                 out.writeIndex(1);
 //Facility Map
                 out.writeLong(((ZoneWrapper) udf.getValue()).getFacilityMap().getTime().getTime());
-                out.writeBoolean(((ZoneWrapper) udf.getValue()).getFacilityMap().getBlinked() != null && (
-                        (ZoneWrapper) udf.getValue()).getFacilityMap().getBlinked());
-                out.writeBoolean(((ZoneWrapper) udf.getValue()).getFacilityMap().getModified() != null && (
-                        (ZoneWrapper) udf.getValue()).getFacilityMap().getModified());
+                out.writeBoolean(((ZoneWrapper) udf.getValue()).getFacilityMap().getBlinked() != null
+                        && ((ZoneWrapper) udf.getValue()).getFacilityMap().getBlinked());
+                out.writeBoolean(((ZoneWrapper) udf.getValue()).getFacilityMap().getModified() != null
+                        && ((ZoneWrapper) udf.getValue()).getFacilityMap().getModified());
                 out.writeBoolean(false);
                 out.writeString(((ZoneWrapper) udf.getValue()).getFacilityMap().getName());
                 out.writeString(((ZoneWrapper) udf.getValue()).getFacilityMap().getCode());
 //Zone Type
                 out.writeLong(((ZoneWrapper) udf.getValue()).getZoneType().getTime().getTime());
-                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneType().getBlinked() != null && ((ZoneWrapper)
-                        udf.getValue()).getZoneType().getBlinked());
-                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneType().getModified() != null && ((ZoneWrapper)
-                        udf.getValue()).getZoneType().getModified());
+                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneType().getBlinked() != null
+                        && ((ZoneWrapper) udf.getValue()).getZoneType().getBlinked());
+                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneType().getModified() != null
+                        && ((ZoneWrapper) udf.getValue()).getZoneType().getModified());
                 out.writeBoolean(false);
                 out.writeString(((ZoneWrapper) udf.getValue()).getZoneType().getName());
                 out.writeString(((ZoneWrapper) udf.getValue()).getZoneType().getCode());
 //Zone Group
                 out.writeLong(((ZoneWrapper) udf.getValue()).getZoneGroup().getTime().getTime());
-                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneGroup().getBlinked() != null && ((ZoneWrapper)
-                        udf.getValue()).getZoneGroup().getBlinked());
-                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneGroup().getModified() != null && (
-                        (ZoneWrapper) udf.getValue()).getZoneGroup().getModified());
+                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneGroup().getBlinked() != null
+                        && ((ZoneWrapper) udf.getValue()).getZoneGroup().getBlinked());
+                out.writeBoolean(((ZoneWrapper) udf.getValue()).getZoneGroup().getModified() != null
+                        && ((ZoneWrapper) udf.getValue()).getZoneGroup().getModified());
                 out.writeBoolean(false);
                 out.writeString(((ZoneWrapper) udf.getValue()).getZoneGroup().getName());
                 out.writeString(((ZoneWrapper) udf.getValue()).getZoneGroup().getCode());
@@ -195,34 +169,31 @@ public class FinalThingWrapper extends CustomEncoding<PropertyWrapper> {
                         in.readString()
                 );
             case 1:
-                ZonePropertyWrapper facilityMap = new ZonePropertyWrapper(
-                        new Date(in.readLong()),
-                        in.readBoolean(),
-                        in.readBoolean(),
-                        in.readBoolean(),
-                        in.readString(),
-                        in.readString()
-                );
-                ZonePropertyWrapper zoneType = new ZonePropertyWrapper(
-                        new Date(in.readLong()),
-                        in.readBoolean(),
-                        in.readBoolean(),
-                        in.readBoolean(),
-                        in.readString(),
-                        in.readString()
-                );
-                ZonePropertyWrapper zoneGroup = new ZonePropertyWrapper(
-                        new Date(in.readLong()),
-                        in.readBoolean(),
-                        in.readBoolean(),
-                        in.readBoolean(),
-                        in.readString(),
-                        in.readString()
-                );
                 return new ZoneWrapper(
-                        facilityMap,
-                        zoneType,
-                        zoneGroup,
+                        new ZonePropertyWrapper(
+                                new Date(in.readLong()),
+                                in.readBoolean(),
+                                in.readBoolean(),
+                                in.readBoolean(),
+                                in.readString(),
+                                in.readString()
+                        ),
+                        new ZonePropertyWrapper(
+                                new Date(in.readLong()),
+                                in.readBoolean(),
+                                in.readBoolean(),
+                                in.readBoolean(),
+                                in.readString(),
+                                in.readString()
+                        ),
+                        new ZonePropertyWrapper(
+                                new Date(in.readLong()),
+                                in.readBoolean(),
+                                in.readBoolean(),
+                                in.readBoolean(),
+                                in.readString(),
+                                in.readString()
+                        ),
                         in.readLong(),
                         in.readString(),
                         in.readString()
