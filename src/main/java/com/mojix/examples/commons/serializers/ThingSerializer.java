@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mojix.examples.commons.wrappers.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class ThingSerializer extends JsonSerializer<ThingWrapper> {
         gen.writeObject(thing);
     }
 
-    private static ObjectNode getMetaNode(Object meta){
+    private static ObjectNode getMetaNode(MetaWrapper meta){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode output =  mapper.createObjectNode();
         for (Field i : meta.getClass().getFields()) {
@@ -60,24 +61,45 @@ public class ThingSerializer extends JsonSerializer<ThingWrapper> {
                     output.put(i.getName(), i.get(meta).toString());
                 }
             } catch (Exception e) {
-                logger.error("Error parsing non UDFs properties.", e);
+                logger.error("Error parsing meta properties.", e);
             }
         }
         return output;
     }
 
-    private ObjectNode getGroupNode (GroupThingWrapper group) {
+    private ObjectNode getGroupNode (Object group) {
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode groupNode = mapper.createObjectNode();
-        ObjectNode groupTypeNode = mapper.createObjectNode();
-        groupTypeNode.put("id", group.getGroupType().getId());
-        groupTypeNode.put("name", group.getGroupType().getName());
-        groupTypeNode.put("code", group.getGroupType().getCode());
-        groupNode.set("groupType", groupTypeNode);
-        groupNode.put("id", group.getId());
-        groupNode.put("name", group.getName());
-        groupNode.put("code", group.getCode());
-        return groupNode;
+        ObjectNode output =  mapper.createObjectNode();
+        for (Field i : group.getClass().getFields()) {
+            try {
+                if (StringUtils.contains(i.get(group).getClass().toString(), "mojix")){
+                    output.set(i.getName(), getGroupNode(i.get(group)));
+                } else {
+                    output.put(i.getName(), i.get(group).toString());
+                }
+            } catch (Exception e) {
+                logger.error("Error parsing group properties.", e);
+            }
+        }
+        return output;
+
+//
+//
+//
+//
+//
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        ObjectNode groupNode = mapper.createObjectNode();
+//        ObjectNode groupTypeNode = mapper.createObjectNode();
+//        groupTypeNode.put("id", group.getGroupType().getId());
+//        groupTypeNode.put("name", group.getGroupType().getName());
+//        groupTypeNode.put("code", group.getGroupType().getCode());
+//        groupNode.set("groupType", groupTypeNode);
+//        groupNode.put("id", group.getId());
+//        groupNode.put("name", group.getName());
+//        groupNode.put("code", group.getCode());
+//        return groupNode;
     }
 
     private ObjectNode getThingTypeNode (ThingPropertyValueWrapper thingType) {
