@@ -16,10 +16,10 @@ repositories {
 dependencies {
     compile "org.apache.commons:commons-lang3:3.0"
     compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile group: 'io.confluent', name: 'kafka-avro-serializer', version:'3.0.1'
-    compile group: 'io.confluent', name: 'kafka-schema-registry-client', version:'3.0.1'
-    compile group: 'org.apache.kafka', name: 'kafka-clients', version:'0.10.0.1-cp1'
-    compile group: 'org.apache.kafka', name: 'kafka-streams', version:'0.10.0.1-cp1'
+    compile group: 'io.confluent', name: 'kafka-avro-serializer', version:'3.1.1'
+    compile group: 'io.confluent', name: 'kafka-schema-registry-client', version:'3.1.1'
+    compile group: 'org.apache.kafka', name: 'kafka-clients', version:'0.10.1.0-cp2'
+    compile group: 'org.apache.kafka', name: 'kafka-streams', version:'0.10.1.0-cp2'
     compile group: 'org.apache.avro', name: 'avro', version:'1.8.1'
     compile group: 'org.apache.avro', name: 'avro-maven-plugin', version:'1.8.1'
     compile group: 'org.scala-lang', name: 'scala-library', version:'2.11.8'
@@ -32,11 +32,11 @@ dependencies {
     compile group: 'org.scalactic', name: 'scalactic_2.11', version:'2.2.6'
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'org.assertj', name: 'assertj-core', version:'3.3.0'
-    testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version:'0.10.0.1-cp1'
-    testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version:'0.10.0.1-cp1', classifier:'test'
-    testCompile group: 'org.apache.kafka', name: 'kafka-clients', version:'0.10.0.1-cp1', classifier:'test'
+    testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version:'0.10.1.0-cp2'
+    testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version:'0.10.1.0-cp2', classifier:'test'
+    testCompile group: 'org.apache.kafka', name: 'kafka-clients', version:'0.10.1.0-cp2', classifier:'test'
     testCompile group: 'org.apache.curator', name: 'curator-test', version:'2.9.0'
-    testCompile group: 'io.confluent', name: 'kafka-schema-registry', version:'3.0.1'
-    testCompile group: 'io.confluent', name: 'kafka-schema-registry', version:'3.0.1', classifier:'tests'
+    testCompile group: 'io.confluent', name: 'kafka-schema-registry', version:'3.1.1'
+    testCompile group: 'io.confluent', name: 'kafka-schema-registry', version:'3.1.1', classifier:'tests'
     testCompile group: 'org.scalatest', name: 'scalatest_2.11', version:'2.2.6'
 }

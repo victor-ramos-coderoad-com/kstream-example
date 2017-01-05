@@ -1,21 +1,30 @@
 package com.mojix.examples;
 
+import com.tierconnect.riot.bridges.CacheService;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.errors.InvalidStateStoreException;
 import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.state.KeyValueIterator;
+import org.apache.kafka.streams.state.QueryableStoreTypes;
+import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
- * Created by vramos on 12/21/16.
+ * Created by vramos on 1/4/17.
  */
-public class KTableCache {
-    public static void main(String[] args) throws Exception{
+public class KCacheService {
+
+    private static CacheService cacheService = null;
+    public static final String CACHE_ZONE = "cachezone";
+
+    public static void main(String[] args) throws Exception {
         final Properties streamsConfiguration = new Properties();
         // Application unique name in the Kafka cluster
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "kcorebridge");
@@ -38,7 +47,8 @@ public class KTableCache {
         final KStreamBuilder builder = new KStreamBuilder();
         final KStream<String, String> blinks = builder.stream(stringSerde, stringSerde, "___v1___data___ALEB");
 
-        final KTable<String,String> thingCache = builder.table(stringSerde,stringSerde, "___v1___cache___thing","CACHE_THING");
+        final KTable<String,String> zoneCache = builder.table(stringSerde,stringSerde, "___v1___cache___zone", CACHE_ZONE);
+
 
         // TRANSFORMATIONS
         final KStream<String, String> dataout = blinks
@@ -52,13 +62,6 @@ public class KTableCache {
                             e.printStackTrace();
                         }
                         return Arrays.asList(pattern.split(value.toLowerCase()));
-                    }
-                })
-                .leftJoin(thingCache, new ValueJoiner<String, String, String>() {
-                    @Override
-                    public String apply(String value1, String value2) {
-                        System.out.println(String.format(">>>> (blink,cache):(%s,%s)",value1,value2));
-                        return value1;
                     }
                 })
                 .map(new KeyValueMapper<String, String, KeyValue<String, String>>() {
@@ -77,6 +80,8 @@ public class KTableCache {
                     @Override
                     public KeyValue<String, String> apply(String key, String value) {
                         System.out.println("3. Processing thing message "+Thread.currentThread().getId());
+                        String zones = cacheService.getAllZones();
+                        System.out.println(zones);
                         try {
                             Thread.sleep(50);
                         } catch (InterruptedException e) {
@@ -89,6 +94,8 @@ public class KTableCache {
                     @Override
                     public KeyValue<String, String> apply(String key, String value) {
                         System.out.println("4. Creating json data out "+Thread.currentThread().getId());
+                        String zone = cacheService.getZoneByCode(value);
+                        System.out.println(zone);
                         System.out.println("_______________________________________________");
                         try {
                             Thread.sleep(10);
@@ -99,12 +106,6 @@ public class KTableCache {
                     }
                 });
 
-//        final KStream<String, Long> dataout = blinks
-//                .flatMapValues(value -> Arrays.asList(pattern.split(value.toLowerCase())))
-//                .map((key, word) -> new KeyValue<>(word, word))
-//                .through("RekeyedIntermediateTopic")
-//                .countByKey("Counts")
-//                .toStream();
 
         // OUTPUT
         dataout.to(stringSerde, stringSerde, "___v1___dataout");
@@ -114,5 +115,7 @@ public class KTableCache {
         streams.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+        cacheService = new CacheService(streams);
+
     }
 }
