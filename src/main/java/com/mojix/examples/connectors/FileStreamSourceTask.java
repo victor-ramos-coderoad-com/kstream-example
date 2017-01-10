@@ -32,23 +32,23 @@ public class FileStreamSourceTask extends SourceTask {
 
     @Override
     public List<SourceRecord> poll() throws InterruptedException {
-        try {
-            ArrayList<SourceRecord> records = new ArrayList<>();
-            while (streamValid(stream) && records.isEmpty()) {
-                LineAndOffset line = readToNextLine(stream);
-                if (line != null) {
-                    Map sourcePartition = Collections.singletonMap("filename", filename);
-                    Map sourceOffset = Collections.singletonMap("position", streamOffset);
-                    records.add(new SourceRecord(sourcePartition, sourceOffset, topic, Schema.STRING_SCHEMA, line));
-                } else {
-                    Thread.sleep(1);
-                }
-            }
-            return records;
-        } catch (IOException e) {
-            // Underlying stream was killed, probably as a result of calling stop. Allow to return
-            // null, and driving thread will handle any shutdown if necessary.
-        }
+//        try {
+//            ArrayList<SourceRecord> records = new ArrayList<>();
+//            while (streamValid(stream) && records.isEmpty()) {
+//                LineAndOffset line = readToNextLine(stream);
+//                if (line != null) {
+//                    Map sourcePartition = Collections.singletonMap("filename", filename);
+//                    Map sourceOffset = Collections.singletonMap("position", streamOffset);
+//                    records.add(new SourceRecord(sourcePartition, sourceOffset, topic, Schema.STRING_SCHEMA, line));
+//                } else {
+//                    Thread.sleep(1);
+//                }
+//            }
+//            return records;
+//        } catch (IOException e) {
+//            // Underlying stream was killed, probably as a result of calling stop. Allow to return
+//            // null, and driving thread will handle any shutdown if necessary.
+//        }
         return null;
     }
 
